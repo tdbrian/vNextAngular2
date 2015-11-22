@@ -210,3 +210,5 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+src/ioCasts.Angular2/wwwroot/js/bundle.js.map
+src/ioCasts.Angular2/wwwroot/js/bundle.js
