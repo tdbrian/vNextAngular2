@@ -3,7 +3,7 @@
 /**
  * @author Thomas Brian <tdbrian@gmail.com>
  * @fileOverview gulpfile.js handles all build processes for the project
- *               including bundling and cleaning.
+ * including bundling and cleaning.
  * @license MIT
  */
 var gulp = require("gulp"),
@@ -30,7 +30,7 @@ paths.concatCssDest = paths.webroot + "css/site.min.css";
 paths.ts = paths.app + "**/*.ts";
 
 // ------------------------------------------------------------------------
-// Project paths
+// Cleanup Tasks
 // ------------------------------------------------------------------------
 
 gulp.task("clean:js", function (cb) {
@@ -46,6 +46,34 @@ gulp.task("clean:css", function (cb) {
  * @description Handles all cleaning 
  */
 gulp.task("clean", ["clean:js", "clean:css"]);
+
+// ------------------------------------------------------------------------
+// Minification Tasks
+// ------------------------------------------------------------------------
+
+gulp.task("min:js", function () {
+    gulp.src([paths.js, "!" + paths.minJs], { base: "." })
+        .pipe(concat(paths.concatJsDest))
+        .pipe(uglify())
+        .pipe(gulp.dest("."));
+});
+
+gulp.task("min:css", function () {
+    gulp.src([paths.css, "!" + paths.minCss])
+        .pipe(concat(paths.concatCssDest))
+        .pipe(cssmin())
+        .pipe(gulp.dest("."));
+});
+
+/**
+ * @name min
+ * @description Handles all minification
+ */
+gulp.task("min", ["min:js", "min:css"]);
+
+// ------------------------------------------------------------------------
+// Bundling Tasks
+// ------------------------------------------------------------------------
 
 /**
  * @name pack
@@ -67,23 +95,3 @@ gulp.task('pack', function () {
       }))
       .pipe(gulp.dest('wwwroot/js'));
 });
-
-gulp.task("min:js", function () {
-    gulp.src([paths.js, "!" + paths.minJs], { base: "." })
-        .pipe(concat(paths.concatJsDest))
-        .pipe(uglify())
-        .pipe(gulp.dest("."));
-});
-
-gulp.task("min:css", function () {
-    gulp.src([paths.css, "!" + paths.minCss])
-        .pipe(concat(paths.concatCssDest))
-        .pipe(cssmin())
-        .pipe(gulp.dest("."));
-});
-
-/**
- * @name min
- * @description Handles all minification
- */
-gulp.task("min", ["min:js", "min:css"]);
