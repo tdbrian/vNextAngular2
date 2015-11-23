@@ -12,7 +12,8 @@ var gulp = require("gulp"),
     cssmin = require("gulp-cssmin"),
     uglify = require("gulp-uglify"),
     webpack = require('gulp-webpack'),
-    project = require("./project.json");
+    project = require("./project.json"),
+    liveReloadPlugin = require('webpack-livereload-plugin');
 
 // ------------------------------------------------------------------------
 // Project paths
@@ -89,6 +90,9 @@ gulp.task('pack', function () {
                 { test: /\.ts$/, loader: 'ts-loader' },
               ],
           },
+          plugins: [
+              new liveReloadPlugin()
+          ],
           output: {
               filename: 'bundle.js',
           }

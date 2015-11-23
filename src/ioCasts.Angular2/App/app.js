@@ -13,6 +13,11 @@ var angular2_1 = require('angular2/angular2');
 var AppComponent = (function () {
     function AppComponent() {
         this.pageLabel = "Angular2 Demo";
+        this.buttonLabel = "Test it";
+        this.testIt = function () {
+            alert("hello");
+        };
+        this.pageLabel = "but what?";
     }
     AppComponent = __decorate([
         angular2_1.Component({

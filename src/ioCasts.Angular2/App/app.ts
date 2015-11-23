@@ -9,11 +9,16 @@ import {bootstrap, Component} from 'angular2/angular2';
 
 class AppComponent {
     
-    public pageLabel = "Angular2 Demo";
+    pageLabel = "Angular2 Demo";
+    buttonLabel = "Test it";
 
     constructor() {
-        
+        this.pageLabel = "but what?";
     }
+
+    testIt = () => {
+        alert("hello");
+    };
 }
 
 // Starts up the Angular2 application
