@@ -1,4 +1,4 @@
-﻿/// <binding Clean='clean' ProjectOpened='pack' />
+﻿/// <binding Clean='clean' ProjectOpened='pack, watch:html' />
 
 /**
  * @author Thomas Brian <tdbrian@gmail.com>
@@ -13,7 +13,10 @@ var gulp = require("gulp"),
     uglify = require("gulp-uglify"),
     webpack = require('gulp-webpack'),
     project = require("./project.json"),
-    liveReloadPlugin = require('webpack-livereload-plugin');
+    liveReloadPlugin = require('webpack-livereload-plugin'),
+    changed = require('gulp-changed'),
+    plumber = require('gulp-plumber'),
+    watch = require('gulp-watch');
 
 // ------------------------------------------------------------------------
 // Project paths
@@ -22,6 +25,7 @@ var gulp = require("gulp"),
 var paths = { webroot: "./" + project.webroot + "/" };
 
 paths.app = "./App/";
+paths.appHtml = paths.app + "**/*.html";
 paths.js = paths.webroot + "js/**/*.js";
 paths.minJs = paths.webroot + "js/**/*.min.js";
 paths.css = paths.webroot + "css/**/*.css";
@@ -82,20 +86,33 @@ gulp.task("min", ["min:js", "min:css"]);
  */
 gulp.task('pack', function () {
     gulp.src('./App/app.ts')
-      .pipe(webpack({
-          watch: true,
-          devtool: 'source-map',
-          module: {
-              loaders: [
+        .pipe(plumber())
+        .pipe(webpack({
+            watch: true,
+            devtool: 'source-map',
+            module: {
+                loaders: [
                 { test: /\.ts$/, loader: 'ts-loader' },
-              ],
-          },
-          plugins: [
-              new liveReloadPlugin()
-          ],
-          output: {
-              filename: 'bundle.js',
-          }
-      }))
-      .pipe(gulp.dest('wwwroot/js'));
+                ],
+            },
+            plugins: [
+                new liveReloadPlugin()
+            ],
+            output: {
+                filename: 'bundle.js',
+            }
+        }))
+        .pipe(gulp.dest('wwwroot/js'));
+});
+
+// ------------------------------------------------------------------------
+// Watch for changes and do actions
+// ------------------------------------------------------------------------
+
+gulp.task('watch:html', function () {
+    return gulp.src(paths.appHtml)
+        .pipe(plumber())
+        .pipe(watch(paths.appHtml))
+        .pipe(changed(paths.webroot))
+        .pipe(gulp.dest(paths.webroot));
 });
